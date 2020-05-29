@@ -7,16 +7,14 @@ const Item = styled(Link)`
   text-decoration: none;
   font-size: 30px;
   color: #fff;
-  width: 190px;
-  height:300px;
-  margin-right: 8px;
+  width: 200px; 
+  margin-right: 15px;
   flex: none;
   list-style: none;
   .img {
     width: auto;
     height: 85%;
     img {
-      object-fit: cover;
       height: 100%;
       width: 100%;
       transition: all 0.5s ease-in-out;

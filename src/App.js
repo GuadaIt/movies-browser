@@ -5,13 +5,11 @@ import Nav from './components/Nav';
 import MainContainer from './components/MainContainer';
 import SingleContainer from './components/SingleContainer';
 import Results from './components/Results';
+import ExploreAll from './components/ExploreAll';
 
 const App = () => {
-
-  require('dotenv').config();
   
   const api_key = process.env.REACT_APP_API_KEY;
-  console.log(api_key);
 
   return (
     <Router>
@@ -52,15 +50,14 @@ const App = () => {
             link4={`https://api.themoviedb.org/3/tv/airing_today?api_key=${api_key}&language=en-US&page=1`} 
             title4={'Tv Shows Airing Today'} />}
         />
-        <Route path='/movie/:movieid' 
+        <Route exact path='/movie/:movieid' 
           component={() => <SingleContainer api_key={api_key} />}
         />
-        <Route path='/tv/:tvid' 
+        <Route exact path='/tv/:tvid' 
           component={() => <SingleContainer api_key={api_key} />}
         />
         <Route path='/search/:searchInput' component={() => <Results api_key={api_key}/>}/>
-        <Route path='/tv/category/:category' component={() => <Results api_key={api_key} category='tv'/>}/>
-        <Route path='/movie/category/:category' component={() => <Results api_key={api_key} category='movie'/>}/>
+        <Route path='/:media/category/:category' component={() => <ExploreAll api_key={api_key} />}/>
 
       </Switch>
     </Router>

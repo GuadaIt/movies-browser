@@ -1,11 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import Header from './Header';
+import CarouselContainer from './CarouselContainer';
+import Overview from './Overview';
+import Episodes from './Episodes';
+import Photos from './Photos';
 
 const ContenedorPpal = styled.main`
   display: flex;
   flex-direction: column;
+  overflow: hidden;
   height: 100%;
   width: 100%;
   background-color: #101010;
@@ -30,27 +35,31 @@ const ContenedorPpal = styled.main`
 
 const SingleContainer = ({ api_key }) => {
 
-
-  //la ruta no cambia, sólo lo que muestra el componente
-  //peeeero, al cambiar el estado se vuelve a renderizar todo el container
-  //que no es lo ideal
-  
+  const [info, setInfo] = useState([]);
   const [section, setSection] = useState('overview');
   const params = useParams();
 
+  useEffect(() => {
+    fetch(params.movieid ?
+    `https://api.themoviedb.org/3/movie/${params.movieid}?api_key=${api_key}&language=en-US`
+    : `https://api.themoviedb.org/3/tv/${params.tvid}?api_key=${api_key}&language=en-US`)
+    .then(res => res.json())
+    .then(data => setInfo(data))
+  }, []);
+
 
   const details = {
-    'overview': <h1>OVERVIEW</h1>,
-    'videos': <h1>VIDEOS</h1>,
-    'episodes': <h1>EPISODES</h1>,
-    'photos': <h1>PHOTOS</h1>
+    'overview': <Overview item={info} api_key={api_key}/>,
+    'videos': <Photos />,
+    'episodes': <Episodes/>,
+    'photos': <Photos/>
   };
 
   const addEpisodesSection = e => {
     e.persist();
     setSection(e.target.textContent.toLowerCase());
   };
-
+  
   return (
     <ContenedorPpal>
       <Header linkSingleItem={params.movieid ?
@@ -76,9 +85,13 @@ const SingleContainer = ({ api_key }) => {
             <p>PHOTOS</p>
           </div>
         </div>
-        <div>
-          {details[section]}
-        </div>
+
+        {details[section]}
+
+        <CarouselContainer title={'More Like This'} 
+          link={params.movieid ? `https://api.themoviedb.org/3/movie/${params.movieid}/similar?api_key=${api_key}&language=en-US&page=1`
+          : `https://api.themoviedb.org/3/tv/${params.tvid}/similar?api_key=${api_key}&language=en-US&page=1`}/>
+     
       </nav>
 
     </ContenedorPpal>

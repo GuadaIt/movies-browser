@@ -39,21 +39,20 @@ const Carousel = styled.ul`
 const CarouselContainer = ({ link, title }) => {
 
   const history = useHistory();
-
   const items = useFetch(link);
-
   const routes = {
-    'Popular Movies': 'category/popular-movies',
-    'Top Rated Movies': 'category/top-rated-movies',
-    'Upcoming Movies': 'category/upcoming-movies',
-    'Now Playing Movies': 'category/now-playing-movies',
-    'Popular Tv Shows': 'category/popular-tv-shows',
-    'Top Rated Tv Shows': 'category/top-rated-tv-shows',
-    'Currently Airing Tv Shows': 'category/currently-airing-tv-shows',
-    'Tv Shows Airing Today': 'category/tv-shows-airing-today'
+    'Trending Movies': 'movie/category/trending-movies',
+    'Popular Movies': 'movie/category/popular-movies',
+    'Top Rated Movies': 'movie/category/top-rated-movies',
+    'Upcoming Movies': 'movie/category/upcoming-movies',
+    'Now Playing Movies': 'movie/category/now-playing-movies',
+    'Trending Tv Shows': 'tv/category/trending-tv-shows',
+    'Popular Tv Shows': 'tv/category/popular-tv-shows',
+    'Top Rated Tv Shows': 'tv/category/top-rated-tv-shows',
+    'Currently Airing Tv Shows': 'tv/category/currently-airing-tv-shows',
+    'Tv Shows Airing Today': 'tv/category/tv-shows-airing-today'
   };
-  //no me redirige a /tv/category/blablabla sino a category/blablabla
-  //*inserte aquí meme de "está mal, pero no tan mal"*/ 
+
   const handleClick = () => {
     history.push(`./${routes[title]}`);
   };

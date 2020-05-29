@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import useFetch from '../hooks/useFetch';
 
 const HeaderSection = styled.header`
   height: 450px;
@@ -12,7 +11,7 @@ const HeaderSection = styled.header`
   background-size: cover;
   border-left: 1px solid #101010;
   h2 {
-    font-size: 30px;
+    font-size: 40px;
     max-width: 50%;
   };
   p {
