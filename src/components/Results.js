@@ -28,25 +28,30 @@ const ResultsNav = styled.div`
 
 const Results = ({ api_key }) => {
    
-  const [page, setPage] = useState(1);
   const { searchInput } = useParams();
   const [results, setResults] = useState([]);
-  // const [totalPages, setTotalPages] = useState(null);
+  const [scrolling, setScrolling] = useState(false);
   const [search, setSearch] = useState({
    page: 1,
    totalPages: null
   });
   
 
-  useEffect(() => {
+  useEffect(() => {  
+    
+    window.addEventListener('scroll', (e => handleScroll(e)));
+
     fetch(`https://api.themoviedb.org/3/search/multi?api_key=${api_key}&language=en-US&page=${search.page}&include_adult=false&query=${searchInput}`)
       .then(res => res.json())
       .then(data => {
-        setResults(data.results);
-        setSearch({ page: page + 1, totalPages: data.total_pages});
-
+        setResults([...results, ...data.results]);
+        setSearch({ page: search.page + 1, totalPages: data.total_pages});
+        console.log(data.total_pages)
+        console.log(search)
       });
-  }, []);
+  }, [scrolling]);
+
+  
 
   // const handleClick = () => {
   //   let { page } = search;
@@ -63,28 +68,13 @@ const Results = ({ api_key }) => {
   //   };
   // };
 
-  window.addEventListener('scroll', (e => handleScroll(e)));
-
-  const handleScroll = e => {
+  const handleScroll = e => {  
     let bodyHeight = e.target.documentElement.scrollHeight;
-    let scrollPosition = window.pageYOffset + window.innerHeight;
-
-    
-    if (search.totalPages >= search.page) return 
+    let scrollPosition = window.pageYOffset + window.innerHeight;    
+    if (search.totalPages > search.page) return console.log('scroll stopppppp'); 
     if (scrollPosition === bodyHeight) { 
-    
-
-       fetch(`https://api.themoviedb.org/3/search/multi?api_key=${api_key}&language=en-US&page=${search.page}&include_adult=false&query=${searchInput}`)
-       .then(res => res.json())
-       .then(data => {
-         setResults([...results, ...data.results]);
-         
-        }); 
-       
-        return results;
-      
-    } else {
-      return results;
+      console.log('scroll yaaaaas');
+      setScrolling(true);     
     };
   };
 

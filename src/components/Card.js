@@ -42,7 +42,7 @@ const Card = ({ info }) => {
 
   return (
     
-      <Item to={info.media_type ? `/${info.media_type}/${info.id}` : `${pathname}/${info.id}`}>
+      <Item to={info.media_type ? `${info.media_type}/${info.id}` : `${pathname}/${info.id}`}>
         <div className='img'>
           <img alt ={info.title || info.original_name || info.original_title} src={`https://image.tmdb.org/t/p/w500/${info.poster_path}`} />
         </div>

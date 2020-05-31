@@ -22,6 +22,9 @@ const ContenedorPpal = styled.main`
     width: 100%;
     height: 60px;
     background-color: #0D0D0D;
+      p {
+        font-size: 25px;
+      };
     div {
       cursor: pointer;
       background-color: ${active => active ? '#101010' : '#0D0D0D'};
@@ -51,7 +54,7 @@ const SingleContainer = ({ api_key }) => {
   const details = {
     'overview': <Overview item={info} api_key={api_key}/>,
     'videos': <Photos />,
-    'episodes': <Episodes/>,
+    'episodes': <Episodes item={info} api_key={api_key}/>,
     'photos': <Photos/>
   };
 

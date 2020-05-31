@@ -19,12 +19,11 @@ const Section = styled.section`
     font-size: 18px;
   };
   .extra-info {
-    display: flex;
-    div {
-      flex: 50%;
-      padding: 50px 0;
+    margin: 30px 0 50px;
+    p {
+      margin-bottom: 10px;
     };
-  }
+  };
  };
 `;
 
@@ -38,44 +37,49 @@ const Img = styled.div`
 
 const Overview = ({ item, api_key }) => {
 
+  console.log('item', item)
   const params = useParams();
+  const firstAiredDate = new Date(item.first_air_date).toLocaleDateString();
+  const lastAiredDate = new Date(item.last_air_date).toLocaleDateString();
+  
 
- return (
-   <>
-   <Section>
-     <Img>
-       <img alt={item.title} src={`https://image.tmdb.org/t/p/w500/${item.poster_path}`}/>
-     </Img>
+  return (
+    <>
+      <Section>
+        {item && (
+          <>
+          <Img>
+            <img alt={item.title} src={`https://image.tmdb.org/t/p/w500/${item.poster_path}`} />
+          </Img>
 
-     <div className="info">
-       <h3>STORYLINE</h3>
-       <p>{item.overview}</p>
+          <div className="info">
+            <h3>STORYLINE</h3>
+            <p>{item.overview}</p>
 
-       <div class="extra-info">
-         <div>
-           <p>First Aired</p>
-           <p>Runtime</p>
-           <p>Genre</p>
-           <p>Episodes</p>
-           <p>Languages</p>
-         </div>
-         <div>
-           <p>Last Aired</p>
-           <p>Creator</p>
-           <p>Seasons</p>
-           <p>Status</p>
-           <p>Network</p>
-         </div>
-       </div>
+            <div className="extra-info">
+              <p>First Aired: {firstAiredDate}</p>
+              <p>Runtime: {item.episode_run_time} mins</p>
+              <p>Genres: </p>
+              <p>Episodes: {item.number_of_episodes}</p>
+              <p>Languages: </p>
+              <p>Last Aired: {lastAiredDate}</p>
+              <p>Creator: </p>
+              <p>Seasons: {item.number_of_seasons}</p>
+              <p>Status: {item.status}</p>
+              <p>Network: </p>
+            </div>
 
-       <p>ICONS</p>
-     </div>
+            <div>
+              <p>ICONS</p>
+            </div>
+          </div>
+          </>
+        )}
+      </Section>
 
-  </Section>
-
-  <CarouselContainer title={'Cast'} />
- </>
- )
+      <CarouselContainer title={'Cast'} />
+    </>
+  )
 };
 
 export default Overview;
