@@ -73,7 +73,7 @@ const SingleContainer = ({ api_key }) => {
 
       <nav>
         <div className="menu">
-          <div id="overview" active={'active'} onClick={addEpisodesSection}>
+          <div id="overview" onClick={addEpisodesSection}>
             <p>OVERVIEW</p>
           </div>
           {params.tvid &&

@@ -37,17 +37,13 @@ const Img = styled.div`
 
 const Overview = ({ item, api_key }) => {
 
-  console.log('item', item)
   const params = useParams();
   const firstAiredDate = new Date(item.first_air_date).toLocaleDateString();
   const lastAiredDate = new Date(item.last_air_date).toLocaleDateString();
-  
 
   return (
     <>
       <Section>
-        {item && (
-          <>
           <Img>
             <img alt={item.title} src={`https://image.tmdb.org/t/p/w500/${item.poster_path}`} />
           </Img>
@@ -73,8 +69,7 @@ const Overview = ({ item, api_key }) => {
               <p>ICONS</p>
             </div>
           </div>
-          </>
-        )}
+  
       </Section>
 
       <CarouselContainer title={'Cast'} />
