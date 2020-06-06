@@ -3,13 +3,13 @@ import styled from 'styled-components';
 
 const HiddenSearchBar = styled.div`
   position: absolute;
-  left: 100px;
+  z-index: 3;
   right: 0;
   top: ${({ hidden }) => hidden ? '-70px' : 0};
   font-size: 30px;  
   color: rgba(51, 51, 51, 1);
   background-color: #101010;
-  width: 92.5%; 
+  width: 100%; 
   height: 70px;
   animation-name: ${({ hidden }) => hidden ? '' : 'slideIn'};
   animation-duration: 1s;
@@ -35,6 +35,11 @@ const HiddenSearchBar = styled.div`
       width: 30px;
       height: 30px;
     };
+  };
+
+  @media (min-width: 780px) {
+   left: 100px;
+   width: 92.5%;
   };
 `;
 

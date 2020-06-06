@@ -5,7 +5,7 @@ import Header from './Header';
 import CarouselContainer from './CarouselContainer';
 import Overview from './Overview';
 import Episodes from './Episodes';
-import Photos from './Photos';
+import Media from './Media';
 
 const ContenedorPpal = styled.main`
   display: flex;
@@ -14,7 +14,7 @@ const ContenedorPpal = styled.main`
   height: 100%;
   width: 100%;
   background-color: #101010;
-  nav .menu {
+  .menu {
     display: flex;
     color: #515151;
     align-items: center;
@@ -23,14 +23,24 @@ const ContenedorPpal = styled.main`
     height: 60px;
     background-color: #0D0D0D;
       p {
-        font-size: 25px;
+        font-size: 18px;
       };
     div {
-      cursor: pointer;
-      background-color: ${active => active ? '#101010' : '#0D0D0D'};
-      color: ${active => active ? '#FFF' : '#515151'};
-      &:hover {
-        color: #fff;
+      background-color: #0D0D0D;
+      color: #fff;
+    };
+  };
+
+  @media (min-width: 780px) {
+    .menu {
+      p {
+        font-size: 25px;
+      };
+      div {
+        cursor: pointer;
+        &:hover {
+          color: #515151;
+        };
       };
     };
   };
@@ -50,12 +60,11 @@ const SingleContainer = ({ api_key }) => {
     .then(data => setInfo(data))
   }, []);
 
-
   const details = {
-    'overview': <Overview item={info} api_key={api_key}/>,
-    'videos': <Photos />,
-    'episodes': <Episodes item={info} api_key={api_key}/>,
-    'photos': <Photos/>
+    'overview': <Overview item={info} api_key={api_key} />,
+    'videos': <Media id={info.id} api_key={api_key} media_type={params.movieid ? 'movie' : 'tv'} section='videos' />,
+    'episodes': <Episodes item={info} api_key={api_key} section='episodes' />,
+    'photos': <Media id={info.id} api_key={api_key} media_type={params.movieid ? 'movie' : 'tv'} section='images' />
   };
 
   const addEpisodesSection = e => {
@@ -71,7 +80,7 @@ const SingleContainer = ({ api_key }) => {
         }
        />
 
-      <nav>
+      <div>
         <div className="menu">
           <div id="overview" onClick={addEpisodesSection}>
             <p>OVERVIEW</p>
@@ -95,7 +104,7 @@ const SingleContainer = ({ api_key }) => {
           link={params.movieid ? `https://api.themoviedb.org/3/movie/${params.movieid}/similar?api_key=${api_key}&language=en-US&page=1`
           : `https://api.themoviedb.org/3/tv/${params.tvid}/similar?api_key=${api_key}&language=en-US&page=1`}/>
      
-      </nav>
+      </div>
 
     </ContenedorPpal>
   );

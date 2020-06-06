@@ -9,21 +9,30 @@ const Section = styled.section`
   padding: 30px 20px;
   color: #fff;
   .title-section {
-    display: flex;
-    margin: 0 0 20px 40px;
+    margin-bottom: 20px;
     h3 {
-      font-size: 30px;
-      margin-right: 15px;
+      font-size: 25px;
       font-weight: lighter;
     };
     p {
       color: #089AE8;
-      line-height: 45px;
       &:hover {
         color: rgb(83, 195, 255);
         cursor: pointer;
       };
     };
+  };
+
+  @media (min-width: 780px) {
+    .title-section {
+      display: flex;
+      margin: 0 0 20px 40px;
+      align-items: baseline;
+      h3 {
+        font-size: 30px;
+        margin-right: 15px;
+      };
+    }; 
   };
 `;
 
@@ -40,6 +49,7 @@ const CarouselContainer = ({ link, title }) => {
 
   const history = useHistory();
   const items = useFetch(link);
+
   const routes = {
     'Trending Movies': 'movie/category/trending-movies',
     'Popular Movies': 'movie/category/popular-movies',
@@ -56,14 +66,14 @@ const CarouselContainer = ({ link, title }) => {
   const handleClick = () => {
     history.push(`./${routes[title]}`);
   };
-
+ //falta aplicar el carousel
   return (
     <>
     {items && 
     <Section>
       <div className="title-section">
        <h3>{title}</h3>
-       <p onClick={handleClick}>Explore all</p>
+       {title !== 'Cast' && <p onClick={handleClick}>Explore all</p>}
       </div>
       <Carousel>
         <div>

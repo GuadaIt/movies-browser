@@ -9,13 +9,19 @@ import HomeIcon from '../assets/home.png';
 import SearchBar from './SearchBar';
 
 const NavBar = styled.nav`
- width: 100px;
- height: 100%;
+ height: 50px;
  display: flex;
- flex-direction: column;
  align-items: center;
+ justify-content: space-around;
  background-color: #000;
  color: #fff;
+
+ @media (min-width: 780px) {
+   width: 100px;
+   height: 100%;
+   flex-direction: column;
+   justify-content: normal;
+ };
 `;
 
 const Nav = () => {

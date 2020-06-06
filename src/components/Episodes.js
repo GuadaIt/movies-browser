@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import useFetch from '../hooks/useFetch';
-import EpisodeCard from './EpisodeCard';
+import MediaCard from './MediaCard';
 
 const EpisodesSection = styled.section`
   padding: 30px 30px;
-  div:nth-child(1) {
+  .season-select {
     display: flex;
-    padding: 40px;
+    padding-bottom: 20px;
+    align-items: center;
     select {
-      height: 30px;
       background-color: #000;
       color: #fff;
       padding: 8px;
@@ -19,6 +18,13 @@ const EpisodesSection = styled.section`
       color: #fff;
     };
   };
+
+  @media (min-width: 780px) {
+    .season-select {
+      padding: 40px;
+      align-items: unset;
+    }; 
+  };
 `;
 
 const EpisodesCardsContainer = styled.div`
@@ -27,7 +33,7 @@ const EpisodesCardsContainer = styled.div`
   flex-wrap: wrap;
 `;
 
-const Episodes = ({ item, api_key }) => {
+const Episodes = ({ item, api_key, section }) => {
 
   const { number_of_seasons, id } = item;
   const seasons = Array.apply(null, Array(number_of_seasons));
@@ -46,15 +52,15 @@ const Episodes = ({ item, api_key }) => {
 
   return (
     <EpisodesSection value={selectedOption} onChange={handleChange}>
-      <div>
+      <div className='season-select'>
         <select name='seasons'>
-          {seasons.map((season, i) => <option value={i + 1}>Season {i + 1}</option>)}
+          {seasons.map((season, i) => <option key={i + 1} value={i + 1}>Season {i + 1}</option>)}
         </select>
       <p>{number_of_seasons}{number_of_seasons > 1 ? ' seasons' : ' season'}</p>
       </div>
 
       <EpisodesCardsContainer>
-        {seasonEpisodes.map(episode => <EpisodeCard episode={episode} />)}
+        {seasonEpisodes.map(episode => <MediaCard media_item={episode} section={section} />)}
       </EpisodesCardsContainer>
     </EpisodesSection>
   )
