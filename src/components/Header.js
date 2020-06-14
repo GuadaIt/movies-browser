@@ -66,12 +66,14 @@ const HeaderSection = styled.header`
 `;
 
 const Header = ({ headerInfo, api_key }) => {
+
+  console.log(headerInfo)
  
   const releaseDate = new Date(headerInfo.release_date || headerInfo.last_air_date || headerInfo.first_air_date).toLocaleDateString();
 
   const fetchVideos = async (str, arg) => {
 
-    const videosRes = await fetch(`https://api.themoviedb.org/3/${arg.seasons ? 'tv' : 'movie'}/${arg.id}/videos?api_key=${api_key}&language=en-US`);
+    const videosRes = await fetch(`https://api.themoviedb.org/3/${arg.original_name ? 'tv' : 'movie'}/${arg.id}/videos?api_key=${api_key}&language=en-US`);
     const videosData = await videosRes.json();
     const videoLink = `https://youtube.com/watch?v=${videosData.results[0].key}`; 
 
