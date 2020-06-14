@@ -1,11 +1,11 @@
-import React from 'react';
-import { useHistory } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import useFetch from '../hooks/useFetch';
 import Card from './Card';
 
 const Section = styled.section`
-  width: 100%;
+  position: relative;
+  min-width: 100%;
   padding: 30px 20px;
   color: #fff;
   .title-section {
@@ -45,10 +45,39 @@ const Carousel = styled.ul`
   };
 `;
 
-const CarouselContainer = ({ link, title }) => {
+const CarouselContainer = ({ info, title, api_key }) => {
 
+  const [isFetching, setIsFetching] = useState(true);
+  const [completeInfo, setCompleteInfo] = useState([]);
+  const { id } = useParams();
   const history = useHistory();
-  const items = useFetch(link);
+  let { pathname } = useLocation();
+  pathname = pathname.slice(1);
+
+  useEffect(() => {
+    const fetchExtraInfo = async (info) => {
+      const results = await Promise.all(
+        info.map(async (person) => {
+          const res = await fetch(`https://api.themoviedb.org/3/person/${person.id}?api_key=${api_key}&language=en-US`);
+          const data = await res.json();
+          return {
+            name: person.name,
+            id: person.id,
+            imdb_id: data.imdb_id,
+            profile_path: person.profile_path
+          };
+        })
+      );
+      setCompleteInfo(results);
+    };
+
+    if (title === 'Cast') {
+      fetchExtraInfo(info);
+      setIsFetching(false);
+    } else {
+      setIsFetching(false);
+    };
+  }, []);
 
   const routes = {
     'Trending Movies': 'movie/category/trending-movies',
@@ -60,29 +89,28 @@ const CarouselContainer = ({ link, title }) => {
     'Popular Tv Shows': 'tv/category/popular-tv-shows',
     'Top Rated Tv Shows': 'tv/category/top-rated-tv-shows',
     'Currently Airing Tv Shows': 'tv/category/currently-airing-tv-shows',
-    'Tv Shows Airing Today': 'tv/category/tv-shows-airing-today'
+    'Tv Shows Airing Today': 'tv/category/tv-shows-airing-today',
+    'More Like This': `${id}/similar`
   };
 
   const handleClick = () => {
     history.push(`./${routes[title]}`);
   };
- //falta aplicar el carousel
+  //falta aplicar el carousel
   return (
-    <>
-    {items && 
     <Section>
       <div className="title-section">
-       <h3>{title}</h3>
-       {title !== 'Cast' && <p onClick={handleClick}>Explore all</p>}
+        <h3>{title}</h3>
+        {title !== 'Cast' && <p onClick={handleClick}>Explore all</p>}
       </div>
       <Carousel>
-        <div>
-        {items.map(item => <Card info={item} key={item.id} />)}
-        </div>
+        {!isFetching &&
+          <div>
+            {info.map(item => <Card info={item} key={item.id} pathname={pathname} cast={title} />)}
+          </div>
+        }
       </Carousel>
-    </Section>  
-    }
-    </>
+    </Section>
   );
 };
 

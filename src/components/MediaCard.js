@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import playIcon from '../assets/play.png';
 
 const Card = styled.article`
- position: relative;
  margin: 30px 15px;
  color: #fff;
  width: 300px;
@@ -13,6 +12,7 @@ const Card = styled.article`
  };
  .still-container {
    width: 100%;
+   position: relative;
     img {
       width: 100%;
       height: auto;
@@ -37,8 +37,9 @@ const Card = styled.article`
 
 const ExternalMediaLink = styled.a`
  position: absolute;
- bottom: 60%;
- right: 45%;
+ top: 50%;
+ left: 50%;
+ transform: translate(-50%, -50%);
  text-decoration: none;
  color: #fff;
  &:visited {
@@ -56,38 +57,46 @@ const MediaCard = ({ media_item, section }) => {
 
   const releaseDate = new Date(media_item.air_date).toLocaleDateString();
 
+  const mediaLink = {
+    'videos': `https://img.youtube.com/vi/${media_item.key}/mqdefault.jpg`,
+    'photos': `https://image.tmdb.org/t/p/w500/${media_item.file_path}`,
+    'episodes': `https://image.tmdb.org/t/p/w500/${media_item.still_path}`
+  };
+
   return (
     <Card section={section}>
-      <div className='still-container'>
-        <img src={section === 'episodes' ?
-          `https://image.tmdb.org/t/p/w500/${media_item.still_path}`
-          : `https://img.youtube.com/vi/${media_item.key}/mqdefault.jpg`}
-          alt={media_item.name} />
-      </div>
-      <p>
-        {section === 'episodes' && <span>EP{media_item.episode_number}</span>}
-        {media_item.name}
-      </p>
-
-      {section === 'episodes' ?
+      {media_item &&
         <>
-          <div className='episode-overview'>
-            <p>{media_item.overview}</p>
-          </div>
-          <p>{releaseDate}</p>
-        </>
-        : <p>{media_item.type}</p>
-      }
+          <div className='still-container'>
+            <img src={mediaLink[section]} alt={media_item.name} />
 
-      {section === 'videos' &&
-        <ExternalMediaLink href={`https://youtube.com/watch?v=${media_item.key}`}>
-          <div>
-            <img src={playIcon} alt='play' />
+            {section === 'videos' &&
+              <ExternalMediaLink href={`https://youtube.com/watch?v=${media_item.key}`}>
+                <div>
+                  <img src={playIcon} alt='play' />
+                </div>
+              </ExternalMediaLink>
+            }
           </div>
-        </ExternalMediaLink>
+
+          <p>
+            {section === 'episodes' && <span>EP{media_item.episode_number}</span>}
+            {media_item.name}
+          </p>
+
+          {section === 'episodes' ?
+            <>
+              <div className='episode-overview'>
+                <p>{media_item.overview}</p>
+              </div>
+              <p>{releaseDate}</p>
+            </>
+            : <p>{media_item.type}</p>
+          }
+        </>
       }
     </Card>
-  )
+  );
 };
 
 export default MediaCard;

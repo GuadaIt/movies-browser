@@ -1,5 +1,5 @@
 import React from 'react';
-import { useLocation, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -36,30 +36,30 @@ const Item = styled(Link)`
   };  
 `;
 
-const Card = ({ info }) => {
+const Card = ({ info, pathname, cast }) => {
 
-  const { media, searchInput } = useParams();
-  const { pathname } = useLocation();
+  const { media } = useParams();
   let route;
 
-  if (media) {
+  if (cast === 'Cast') {
+    route = `https://www.imdb.com/name/${info.imdb_id}`;
+  } else if (media) {
     route = `/${media}/${info.id}`; 
-  } else if (searchInput) {
+  } else if (info.media_type) {
     route = `/${info.media_type}/${info.id}`;
-  } else if (pathname.length > 1) {
-    route = `${pathname}/${info.id}`;
   } else {
-    route = `/${info.media_type}/${info.id}`;
+    route = `/${pathname}/${info.id}`;
   };
 
-  return (
-    //éstos links no rutean bien en el componente SingleContainer. 
-    <Item to={route} >
+  return ( 
+    <Item to={route}>
       <div className='img'>
-        <img alt={info.title || info.original_name || info.original_title} src={`https://image.tmdb.org/t/p/w500/${info.poster_path}`} />
+        <img 
+        alt={info.title || info.original_name || info.original_title} 
+        src={`https://image.tmdb.org/t/p/w500/${info.poster_path || info.profile_path}`} />
       </div>
       <div className='title'>
-        <p>{info.title || info.original_name || info.original_title}</p>
+        <p>{info.title || info.original_name || info.original_title || info.name}</p>
       </div>
     </Item>
   );

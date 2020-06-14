@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import Pagination from '@material-ui/lab/Pagination';
 import Card from './Card';
@@ -47,10 +47,14 @@ const ResultsNav = styled.div`
 
 const ExploreAll = ({ api_key }) => {
 
+  const { category } = useParams();
   const { pathname } = useLocation();
   const [results, setResults] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(null);
+
+  let categoryTitle = category.replace(/[^a-z]/g, ' ');
+  categoryTitle = categoryTitle.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1));
 
   const routes = {
     '/movie/category/trending-movies': `https://api.themoviedb.org/3/trending/movie/week?api_key=${api_key}`,
@@ -75,6 +79,7 @@ const ExploreAll = ({ api_key }) => {
   }, [page]);
 
   const handleClick = e => {
+    console.log(e.target)
     let toPage = Number(e.target.textContent);
     setPage(toPage);
   };
@@ -82,7 +87,7 @@ const ExploreAll = ({ api_key }) => {
   return (
     <Container>
       <ResultsNav>
-        <p>Titulo categoria</p>
+        <p>{categoryTitle}</p>
       </ResultsNav>
       <div className='results-container'>
         {results && results.map(item => <Card info={item} key={item.id} />)}

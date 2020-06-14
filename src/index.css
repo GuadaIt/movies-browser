@@ -9,6 +9,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  min-height: 100%;
 }
 
 code {
@@ -24,6 +25,14 @@ li {
 a, a:visited {
   text-decoration: none;
   color: #fff;
+}
+
+html {
+  height: 100%;
+}
+
+#root {
+  min-height: 100vh;
 }
 
 @media (min-width: 800px) {
