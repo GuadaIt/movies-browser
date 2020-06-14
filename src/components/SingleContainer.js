@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { useQuery } from 'react-query';
 import styled from 'styled-components';
 import Header from './Header';
 import CarouselContainer from './CarouselContainer';
 import Overview from './Overview';
 import Episodes from './Episodes';
 import Media from './Media';
+import LoadingDots from './LoadingDots';
 
 const ContenedorPpal = styled.main`
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  height: 100%;
+  min-height: 100%;
   width: 100%;
   background-color: #101010;
   .menu {
@@ -52,21 +54,67 @@ const SingleContainer = ({ api_key }) => {
 
   const [info, setInfo] = useState([]);
   const [section, setSection] = useState('overview');
-  const params = useParams();
+  const { media, id } = useParams();
 
   useEffect(() => {
-    fetch(params.movieid ?
-    `https://api.themoviedb.org/3/movie/${params.movieid}?api_key=${api_key}&language=en-US`
-    : `https://api.themoviedb.org/3/tv/${params.tvid}?api_key=${api_key}&language=en-US`)
-    .then(res => res.json())
-    .then(data => setInfo(data))
-  }, []);
+    fetch(`https://api.themoviedb.org/3/${media}/${id}?api_key=${api_key}&language=en-US&`)
+      .then(res => res.json())
+      .then(data => {
+        setInfo(data);
+      });
+  }, [id]);
+
+  const fetchExtraInfo = async (str, id) => {
+
+    const credRes = await fetch(`${baseUrl}/${media}/${id}/credits?api_key=${api_key}&language=en=US&include_image_language=en,null`);
+    const creditsData = await credRes.json();
+    let castData;
+
+    const extraCast = async (credData) => {
+      const results = await Promise.all(
+        credData.map(async (person) => {
+          const res = await fetch(`https://api.themoviedb.org/3/person/${person.id}?api_key=${api_key}&language=en-US`);
+          const data = await res.json();
+          return {
+            name: person.name,
+            id: person.id,
+            imdb_id: data.imdb_id,
+            profile_path: person.profile_path
+          };
+        })
+      );
+      castData = results;
+    };
+
+    extraCast(creditsData.cast);
+
+    const idRes = await fetch(`${baseUrl}/${media}/${id}/external_ids?api_key=${api_key}&language=en=US&include_image_language=en,null`);
+    const idData = await idRes.json();
+
+    const imgRes = await fetch(`${baseUrl}/${media}/${id}/images?api_key=${api_key}&language=en=US&include_image_language=en,null`);
+    const imgData = await imgRes.json();
+
+    const vidRes = await fetch(`${baseUrl}/${media}/${id}/videos?api_key=${api_key}&language=en-US`);
+    const videoData = await vidRes.json();
+    const vidData = videoData.results;
+
+    const simRes = await fetch(`${baseUrl}/${media}/${id}/similar?api_key=${api_key}&language=en-US&page=1`);
+    const similarData = await simRes.json();
+    const simData = similarData.results;
+
+    const data = { castData, idData, imgData, vidData, simData };
+
+    return data;
+  };
+
+  const { status, data, isFetching } = useQuery(['fetch_extra_data', id], fetchExtraInfo);
 
   const details = {
-    'overview': <Overview item={info} api_key={api_key} />,
-    'videos': <Media id={info.id} api_key={api_key} media_type={params.movieid ? 'movie' : 'tv'} section='videos' />,
-    'episodes': <Episodes item={info} api_key={api_key} section='episodes' />,
-    'photos': <Media id={info.id} api_key={api_key} media_type={params.movieid ? 'movie' : 'tv'} section='images' />
+    'loading': <LoadingDots />,
+    'overview': <Overview item={info} extraInfo={data} media={media} api_key={api_key} />,
+    'videos': <Media info={data} section='videos' />,
+    'episodes': <Episodes item={info} section='episodes' api_key={api_key} />,
+    'photos': <Media info={data} section='photos' />
   };
 
   const addEpisodesSection = e => {
@@ -74,21 +122,17 @@ const SingleContainer = ({ api_key }) => {
     // por que no usar e.target.id aca? 
     setSection(e.target.textContent.toLowerCase());
   };
-  
+
   return (
     <ContenedorPpal>
-      <Header linkSingleItem={params.movieid ?
-        `https://api.themoviedb.org/3/movie/${params.movieid}?api_key=${api_key}&language=en-US`
-        : `https://api.themoviedb.org/3/tv/${params.tvid}?api_key=${api_key}&language=en-US`
-        }
-       />
+      <Header headerInfo={info} api_key={api_key} />
 
       <div>
         <div className="menu">
           <div id="overview" onClick={addEpisodesSection}>
             <p>OVERVIEW</p>
           </div>
-          {params.tvid &&
+          {media === 'tv' &&
             <div id='episodes' onClick={addEpisodesSection}>
               <p>EPISODES</p>
             </div>
@@ -101,12 +145,14 @@ const SingleContainer = ({ api_key }) => {
           </div>
         </div>
 
-        {details[section]}
+        {isFetching ? <LoadingDots />
+          :
+          <>
+            {details[section]}
+            <CarouselContainer title={'More Like This'} info={data.simData} />
+          </>
+        }
 
-        <CarouselContainer title={'More Like This'} 
-          link={params.movieid ? `https://api.themoviedb.org/3/movie/${params.movieid}/similar?api_key=${api_key}&language=en-US&page=1`
-          : `https://api.themoviedb.org/3/tv/${params.tvid}/similar?api_key=${api_key}&language=en-US&page=1`}/>
-     
       </div>
 
     </ContenedorPpal>

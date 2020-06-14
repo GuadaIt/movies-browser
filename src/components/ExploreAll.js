@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import Pagination from '@material-ui/lab/Pagination';
 import Card from './Card';
@@ -47,10 +47,17 @@ const ResultsNav = styled.div`
 
 const ExploreAll = ({ api_key }) => {
 
+  const { category, media, id } = useParams();
   const { pathname } = useLocation();
   const [results, setResults] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(null);
+  let categoryTitle;
+  
+  if (category) {
+    categoryTitle = category.replace(/[^a-z]/g, ' ');
+    categoryTitle = categoryTitle.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1));
+  };
 
   // este objeto de rutas esta algo repetitivo, podriamos usar variables como te deje en los comentarios generales
 
@@ -64,7 +71,8 @@ const ExploreAll = ({ api_key }) => {
     '/tv/category/popular-tv-shows': `https://api.themoviedb.org/3/tv/popular?api_key=${api_key}&language=en-US&page=${page}`,
     '/tv/category/top-rated-tv-shows': `https://api.themoviedb.org/3/tv/top_rated?api_key=${api_key}&language=en-US&page=${page}`,
     '/tv/category/currently-airing-tv-shows': `https://api.themoviedb.org/3/tv/on_the_air?api_key=${api_key}&language=en-US&page=${page}`,
-    '/tv/category/tv-shows-airing-today': `https://api.themoviedb.org/3/tv/airing_today?api_key=${api_key}&language=en-US&page=${page}`
+    '/tv/category/tv-shows-airing-today': `https://api.themoviedb.org/3/tv/airing_today?api_key=${api_key}&language=en-US&page=${page}`,
+    [`/${media}/${id}/similar`]: `https://api.themoviedb.org/3/${media}/${id}/similar?api_key=${api_key}&language=en-US&${page}`
   };
 
   useEffect(() => {

@@ -8,6 +8,7 @@ const Container = styled.section`
   padding: 0 0 30px 0;
   width: 100%;
   background-color: #101010;
+  min-height: 100%;
   .results-container {
     display: flex;
     justify-content: center;
@@ -88,7 +89,7 @@ const Results = ({ api_key }) => {
         <Pagination count={totalPages} page={page} color='primary' onClick={handleClick} />
       </div>
     </Container>
-  )
+  );
 };
 
 export default Results;

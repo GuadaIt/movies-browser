@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import AverageReviewsStar from './AverageReviewsStar';
+import LoadingDots from './LoadingDots';
 
 const HeaderSection = styled.header`
   height: 450px;
@@ -11,6 +12,7 @@ const HeaderSection = styled.header`
   background-position: center;
   background-size: cover;
   border-left: 1px solid #101010;
+  position: relative;
   h2 {
     max-width: 60%;
   };
@@ -39,7 +41,7 @@ const HeaderSection = styled.header`
   };
 
   @media (min-width: 780px) {
-    padding: 80px 0 50px 50px;
+    padding: 60px 0 50px 50px;
     h2 {
       max-width: 50%;
       font-size: 40px;
@@ -61,30 +63,42 @@ const HeaderSection = styled.header`
   };
 `;
 
-const Header = ({ link, linkSingleItem }) => {
+const Header = ({ headerInfo, api_key }) => {
 
   const [item, setItem] = useState({});
   // excelente!
   const releaseDate = new Date(item.release_date || item.last_air_date || item.first_air_date).toLocaleDateString();
 
   useEffect(() => {
-    fetch(`${linkSingleItem || link}`)
-      .then(res => res.json())
-      .then(data => setItem(linkSingleItem ? data : data.results[Math.floor(Math.random() * data.results.length)]))
-  }, []);
+    const fetchVideos = async (arg) => {
+      const videosRes = await fetch(`https://api.themoviedb.org/3/${arg.original_name ? 'tv' : 'movie'}/${arg.id}/videos?api_key=${api_key}&language=en-US`);
+      const videosData = await videosRes.json();
+      const vidLink = videosData.results;
+  
+      setVideos(vidLink);
+    };
+
+    fetchVideos(headerInfo);
+  }, [headerInfo]);
+
+  //to fix: rendering issue. Sometimes href will throw an error
 
   return (
     <>
-      {item && (
-        <HeaderSection img={item.backdrop_path}>
-          <h2>{item.name}{item.title}</h2>
-          <AverageReviewsStar vote_average={item.vote_average} vote_count={item.vote_count}/>
+      {videos
+        ?
+        <HeaderSection img={headerInfo.backdrop_path}>
+          <h2>{headerInfo.name}{headerInfo.title}</h2>
+          <AverageReviewsStar vote_average={headerInfo.vote_average} vote_count={headerInfo.vote_count} />
           <p>{releaseDate}</p>
           <div className="overview">
-            <p>{item.overview}</p>
+            <p>{headerInfo.overview}</p>
           </div>
-          <button>Watch Trailer</button>
-        </HeaderSection>)
+          <button>
+            <a href={`https://youtube.com/watch?v=${videos[0].key}` || ''} target='_blank'>Watch Trailer</a>
+          </button>
+        </HeaderSection>
+        : <LoadingDots />
       }
     </>
   );
