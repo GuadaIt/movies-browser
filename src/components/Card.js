@@ -2,6 +2,7 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import CastCardLink from './CastCardLink';
 
 const Item = styled(Link)`
   text-decoration: none;
@@ -41,9 +42,9 @@ const Card = ({ info, pathname, cast }) => {
   const { media } = useParams();
   let route;
 
-  if (cast === 'Cast') {
-    route = `https://www.imdb.com/name/${info.imdb_id}`;
-  } else if (media) {
+  if (cast === 'Cast') return <CastCardLink info={info} />;
+    
+  if (media) {
     route = `/${media}/${info.id}`; 
   } else if (info.media_type) {
     route = `/${info.media_type}/${info.id}`;

@@ -67,7 +67,25 @@ const SingleContainer = ({ api_key, baseUrl }) => {
 
     const credRes = await fetch(`${baseUrl}/${media}/${id}/credits?api_key=${api_key}&language=en=US&include_image_language=en,null`);
     const creditsData = await credRes.json();
-    const credData = creditsData.cast;
+    let castData;
+
+    const extraCast = async (credData) => {
+      const results = await Promise.all(
+        credData.map(async (person) => {
+          const res = await fetch(`https://api.themoviedb.org/3/person/${person.id}?api_key=${api_key}&language=en-US`);
+          const data = await res.json();
+          return {
+            name: person.name,
+            id: person.id,
+            imdb_id: data.imdb_id,
+            profile_path: person.profile_path
+          };
+        })
+      );
+      castData = results;
+    };
+
+    extraCast(creditsData.cast);
 
     const idRes = await fetch(`${baseUrl}/${media}/${id}/external_ids?api_key=${api_key}&language=en=US&include_image_language=en,null`);
     const idData = await idRes.json();
@@ -83,13 +101,13 @@ const SingleContainer = ({ api_key, baseUrl }) => {
     const similarData = await simRes.json();
     const simData = similarData.results;
 
-    const data = { credData, idData, imgData, vidData, simData };
+    const data = { castData, idData, imgData, vidData, simData };
 
     return data;
   };
 
   const { status, data, isFetching } = useQuery(['fetch_extra_data', id], fetchExtraInfo);
-  
+
   const details = {
     'loading': <LoadingDots />,
     'overview': <Overview item={info} extraInfo={data} media={media} api_key={api_key} />,

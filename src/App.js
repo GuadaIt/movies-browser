@@ -13,7 +13,7 @@ const App = () => {
 
   const links = {
     home: {
-      linkHeader: `https://api.themoviedb.org/3/trending/all/week?api_key=${api_key}`,
+      linkHeader: `${baseUrl}/trending/all/week?api_key=${api_key}`,
       title1: 'Trending Movies',
       link1: `${baseUrl}/trending/movie/week?api_key=${api_key}`,
       title2: 'Trending Tv Shows',

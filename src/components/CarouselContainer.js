@@ -45,39 +45,12 @@ const Carousel = styled.ul`
   };
 `;
 
-const CarouselContainer = ({ info, title, api_key }) => {
+const CarouselContainer = ({ info, title }) => {
 
-  const [isFetching, setIsFetching] = useState(true);
-  const [completeInfo, setCompleteInfo] = useState([]);
   const { id } = useParams();
   const history = useHistory();
   let { pathname } = useLocation();
   pathname = pathname.slice(1);
-
-  useEffect(() => {
-    const fetchExtraInfo = async (info) => {
-      const results = await Promise.all(
-        info.map(async (person) => {
-          const res = await fetch(`https://api.themoviedb.org/3/person/${person.id}?api_key=${api_key}&language=en-US`);
-          const data = await res.json();
-          return {
-            name: person.name,
-            id: person.id,
-            imdb_id: data.imdb_id,
-            profile_path: person.profile_path
-          };
-        })
-      );
-      setCompleteInfo(results);
-    };
-
-    if (title === 'Cast') {
-      fetchExtraInfo(info);
-      setIsFetching(false);
-    } else {
-      setIsFetching(false);
-    };
-  }, []);
 
   const routes = {
     'Trending Movies': 'movie/category/trending-movies',
@@ -104,7 +77,7 @@ const CarouselContainer = ({ info, title, api_key }) => {
         {title !== 'Cast' && <p onClick={handleClick}>Explore all</p>}
       </div>
       <Carousel>
-        {!isFetching &&
+        {info &&
           <div>
             {info.map(item => <Card info={item} key={item.id} pathname={pathname} cast={title} />)}
           </div>

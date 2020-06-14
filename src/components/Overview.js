@@ -76,7 +76,7 @@ const Img = styled.div`
 
 const Overview = ({ item, extraInfo, media, api_key }) => {
 
-  const { idData, credData } = extraInfo;
+  const { idData, castData } = extraInfo;
 
   const releaseDate = new Date(item.release_date).toLocaleDateString();
   const firstAiredDate = new Date(item.first_air_date).toLocaleDateString();
@@ -143,7 +143,7 @@ const Overview = ({ item, extraInfo, media, api_key }) => {
 
           </Section>
 
-          <CarouselContainer title={'Cast'} info={credData} api_key={api_key}/>
+          <CarouselContainer title={'Cast'} info={castData} />
         </>
       }
     </>
