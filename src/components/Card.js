@@ -54,6 +54,12 @@ const Card = ({ info }) => {
 
   return (
     //éstos links no rutean bien en el componente SingleContainer. 
+
+// fijate con un console.log(route) que es lo que pasa
+// Cuando estamos en /movie/category/trending-movies, las rutas se ven asi: /movie/522627
+// Pero cuando entramos a una peli (por ejemplo la 38700), las rutas se ven asi: /movie/38700/8090
+// Eso es porque estamos usando `${pathname}/${info.id}`;, y pathname ya incluye la ruta de la peli donde estamos 
+// Si te trae dudas como arreglarlo escribime!!
     <Item to={route} >
       <div className='img'>
         <img alt={info.title || info.original_name || info.original_title} src={`https://image.tmdb.org/t/p/w500/${info.poster_path}`} />

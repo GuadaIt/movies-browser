@@ -67,6 +67,15 @@ const Results = ({ api_key }) => {
   };
 
  //falta resolver el onClick de las flechas de paginacion
+
+  // Material Ui es muy estricto con la manera de usar sus componentes
+//  Tu funcion deberia ser asi:
+//  const handleChange = (event, value) => {
+//   setPage(value);
+// };
+// Y tu componente asi:
+// <Pagination count={totalPages} page={page} color='primary' onChange={handleChange} />
+
   return (
     <Container>
       <ResultsNav>

@@ -32,6 +32,7 @@ const AverageReviewStar = ({ vote_average, vote_count }) => {
 
   const average_percentage = vote_average * 10;
   
+  // increible este componente!! sencillo y efectivo!!
   return (
     <Reviews>
     <ReviewStarsContainer average={average_percentage}/>

@@ -8,7 +8,7 @@ import ExploreAll from './components/ExploreAll';
 
 const App = () => {
   
-  const api_key = process.env.REACT_APP_API_KEY;
+  const api_key = "6a93319b2d78795675b8bd9aa0965a95";
 
   return (
     <Router>

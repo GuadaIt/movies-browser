@@ -46,6 +46,8 @@ const ContenedorPpal = styled.main`
   };
 `;
 
+// no es necesario pasar api_key como props: las variables de entorno como process.env son globales, 
+// es decir se pueden usar en todo tu codigo. 
 const SingleContainer = ({ api_key }) => {
 
   const [info, setInfo] = useState([]);
@@ -69,6 +71,7 @@ const SingleContainer = ({ api_key }) => {
 
   const addEpisodesSection = e => {
     e.persist();
+    // por que no usar e.target.id aca? 
     setSection(e.target.textContent.toLowerCase());
   };
   

@@ -52,6 +52,8 @@ const ExploreAll = ({ api_key }) => {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(null);
 
+  // este objeto de rutas esta algo repetitivo, podriamos usar variables como te deje en los comentarios generales
+
   const routes = {
     '/movie/category/trending-movies': `https://api.themoviedb.org/3/trending/movie/week?api_key=${api_key}`,
     '/movie/category/popular-movies': `https://api.themoviedb.org/3/movie/popular?api_key=${api_key}&language=en-US&page=${page}`,
@@ -79,9 +81,12 @@ const ExploreAll = ({ api_key }) => {
     setPage(toPage);
   };
 
+  // fijate mis comentarios a la paginacion en el otro componete donde lo usas
+
   return (
     <Container>
       <ResultsNav>
+      {/* aca deberia ir una variable? */}
         <p>Titulo categoria</p>
       </ResultsNav>
       <div className='results-container'>

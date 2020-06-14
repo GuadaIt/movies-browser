@@ -50,6 +50,7 @@ const CarouselContainer = ({ link, title }) => {
   const history = useHistory();
   const items = useFetch(link);
 
+  // excelente este manejo de rutas ! 
   const routes = {
     'Trending Movies': 'movie/category/trending-movies',
     'Popular Movies': 'movie/category/popular-movies',

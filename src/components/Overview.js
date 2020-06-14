@@ -56,7 +56,7 @@ const Img = styled.div`
 `;
 
 const Overview = ({ item, api_key }) => {
-
+  
   //falta acceder a las propiedades del item que son arrays para presentarlo como arrays en el front
 
   const firstAiredDate = new Date(item.first_air_date).toLocaleDateString();
@@ -95,6 +95,10 @@ const Overview = ({ item, api_key }) => {
       {/*éste componente no se muestra porque cuando se renderea los parametros dan undefined, por ende el fetch nunca se hace*/}
       {/*lo ideal sería que cada componente se haga cargo de su propio fetch pero como plantee el trabajo yo, pasando todo como props, se complica*/}
       {/*tal vez implementando useContext se solucionaría? */}
+
+    {/* En este caso yo te recomendaria que haya un componente por encima de CarouselContainer. 
+    Si estamos en una ruta como movie/category/trending-movies podemos usar CarouselContainer, si estamos en una
+    ruta como /movie/67973 debemos pasar las props */}
       <CarouselContainer title={'Cast'} link={`https://api.themoviedb.org/3/tv/2734/credits?api_key=${api_key}&language=en-US`}/>
     </>
   )

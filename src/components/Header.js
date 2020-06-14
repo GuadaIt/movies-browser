@@ -64,6 +64,7 @@ const HeaderSection = styled.header`
 const Header = ({ link, linkSingleItem }) => {
 
   const [item, setItem] = useState({});
+  // excelente!
   const releaseDate = new Date(item.release_date || item.last_air_date || item.first_air_date).toLocaleDateString();
 
   useEffect(() => {

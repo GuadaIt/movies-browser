@@ -50,6 +50,8 @@ const Episodes = ({ item, api_key, section }) => {
     setSelectedOption(e.target.value);
   };
 
+  // excelente como resolviste este componente. 
+
   return (
     <EpisodesSection value={selectedOption} onChange={handleChange}>
       <div className='season-select'>
