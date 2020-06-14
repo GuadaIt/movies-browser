@@ -47,14 +47,17 @@ const ResultsNav = styled.div`
 
 const ExploreAll = ({ api_key }) => {
 
-  const { category } = useParams();
+  const { category, media, id } = useParams();
   const { pathname } = useLocation();
   const [results, setResults] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(null);
-
-  let categoryTitle = category.replace(/[^a-z]/g, ' ');
-  categoryTitle = categoryTitle.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1));
+  let categoryTitle;
+  
+  if (category) {
+    categoryTitle = category.replace(/[^a-z]/g, ' ');
+    categoryTitle = categoryTitle.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1));
+  };
 
   const routes = {
     '/movie/category/trending-movies': `https://api.themoviedb.org/3/trending/movie/week?api_key=${api_key}`,
@@ -66,7 +69,8 @@ const ExploreAll = ({ api_key }) => {
     '/tv/category/popular-tv-shows': `https://api.themoviedb.org/3/tv/popular?api_key=${api_key}&language=en-US&page=${page}`,
     '/tv/category/top-rated-tv-shows': `https://api.themoviedb.org/3/tv/top_rated?api_key=${api_key}&language=en-US&page=${page}`,
     '/tv/category/currently-airing-tv-shows': `https://api.themoviedb.org/3/tv/on_the_air?api_key=${api_key}&language=en-US&page=${page}`,
-    '/tv/category/tv-shows-airing-today': `https://api.themoviedb.org/3/tv/airing_today?api_key=${api_key}&language=en-US&page=${page}`
+    '/tv/category/tv-shows-airing-today': `https://api.themoviedb.org/3/tv/airing_today?api_key=${api_key}&language=en-US&page=${page}`,
+    [`/${media}/${id}/similar`]: `https://api.themoviedb.org/3/${media}/${id}/similar?api_key=${api_key}&language=en-US&${page}`
   };
 
   useEffect(() => {
@@ -79,7 +83,6 @@ const ExploreAll = ({ api_key }) => {
   }, [page]);
 
   const handleClick = e => {
-    console.log(e.target)
     let toPage = Number(e.target.textContent);
     setPage(toPage);
   };
@@ -87,7 +90,7 @@ const ExploreAll = ({ api_key }) => {
   return (
     <Container>
       <ResultsNav>
-        <p>{categoryTitle}</p>
+        <p>{categoryTitle || 'Similar'}</p>
       </ResultsNav>
       <div className='results-container'>
         {results && results.map(item => <Card info={item} key={item.id} />)}

@@ -59,6 +59,7 @@ const App = () => {
         <Route exact path='/search/:searchInput' component={() => <Results api_key={api_key} />} />
         <Route exact path='/:media/:id' component={() => <SingleContainer api_key={api_key} baseUrl={baseUrl} />} />        
         <Route exact path='/:media/category/:category' component={() => <ExploreAll api_key={api_key} />} />
+        <Route exact path='/:media/:id/similar' component={() => <ExploreAll api_key={api_key} />} />
       </Switch>
 
     </Router>
