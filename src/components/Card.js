@@ -57,10 +57,10 @@ const Card = ({ info, pathname, cast }) => {
       <div className='img'>
         <img 
         alt={info.title || info.original_name || info.original_title} 
-        src={`https://image.tmdb.org/t/p/w500/${info.poster_path || info.profile_path}`} />
+        src={`https://image.tmdb.org/t/p/w500/${info.poster_path}`} />
       </div>
       <div className='title'>
-        <p>{info.title || info.original_name || info.original_title || info.name}</p>
+        <p>{info.title || info.original_name || info.original_title}</p>
       </div>
     </Item>
   );

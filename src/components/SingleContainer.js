@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery } from 'react-query';
-import useFetch from '../hooks/useFetch';
 import styled from 'styled-components';
 import Header from './Header';
 import CarouselContainer from './CarouselContainer';

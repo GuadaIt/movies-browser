@@ -80,7 +80,7 @@ const Results = ({ api_key }) => {
         <Pagination count={totalPages} page={page} color='primary' onClick={handleClick} />
       </div>
     </Container>
-  )
+  );
 };
 
 export default Results;
