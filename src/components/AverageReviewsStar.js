@@ -1,5 +1,5 @@
 import React from 'react';
-import styled  from 'styled-components';
+import styled from 'styled-components';
 
 const Reviews = styled.div`
  display: flex;
@@ -31,12 +31,13 @@ const ReviewStarsContainer = styled.div`
 const AverageReviewStar = ({ vote_average, vote_count }) => {
 
   const average_percentage = vote_average * 10;
-  
+
   return (
     <Reviews>
-    <ReviewStarsContainer average={average_percentage}/>
-    <p className='vote-count'>{`${vote_count} reviews`}</p>
+      <ReviewStarsContainer average={average_percentage} />
+      <p className='vote-count'>{`${vote_count} reviews`}</p>
     </Reviews>
+
   );
 };
 

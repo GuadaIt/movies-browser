@@ -1,6 +1,4 @@
-import React, { useState } from 'react';
-import { useQuery } from 'react-query';
-import useFetch from '../hooks/useFetch';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import AverageReviewsStar from './AverageReviewsStar';
 import LoadingDots from './LoadingDots';
@@ -67,26 +65,28 @@ const HeaderSection = styled.header`
 
 const Header = ({ headerInfo, api_key }) => {
 
-  console.log(headerInfo)
- 
+  const [videos, setVideos] = useState();
   const releaseDate = new Date(headerInfo.release_date || headerInfo.last_air_date || headerInfo.first_air_date).toLocaleDateString();
 
-  const fetchVideos = async (str, arg) => {
+  useEffect(() => {
+    const fetchVideos = async (arg) => {
+      const videosRes = await fetch(`https://api.themoviedb.org/3/${arg.original_name ? 'tv' : 'movie'}/${arg.id}/videos?api_key=${api_key}&language=en-US`);
+      const videosData = await videosRes.json();
+      const vidLink = videosData.results;
+  
+      setVideos(vidLink);
+    };
 
-    const videosRes = await fetch(`https://api.themoviedb.org/3/${arg.original_name ? 'tv' : 'movie'}/${arg.id}/videos?api_key=${api_key}&language=en-US`);
-    const videosData = await videosRes.json();
-    const videoLink = `https://youtube.com/watch?v=${videosData.results[0].key}`; 
+    fetchVideos(headerInfo);
+  }, [headerInfo]);
 
-    return videoLink;
-  };
-
-  const { status, data, isFetching } = useQuery(headerInfo.id && ['fetch_item_videos', headerInfo], fetchVideos);
+  //to fix: rendering issue. Sometimes href will throw an error
 
   return (
-    <HeaderSection img={headerInfo.backdrop_path}>
-      {(!isFetching && headerInfo)  
+    <>
+      {videos
         ?
-        <>
+        <HeaderSection img={headerInfo.backdrop_path}>
           <h2>{headerInfo.name}{headerInfo.title}</h2>
           <AverageReviewsStar vote_average={headerInfo.vote_average} vote_count={headerInfo.vote_count} />
           <p>{releaseDate}</p>
@@ -94,12 +94,12 @@ const Header = ({ headerInfo, api_key }) => {
             <p>{headerInfo.overview}</p>
           </div>
           <button>
-            <a href={data} target='_blank'>Watch Trailer</a>
+            <a href={`https://youtube.com/watch?v=${videos[0].key}` || ''} target='_blank'>Watch Trailer</a>
           </button>
-        </>
+        </HeaderSection>
         : <LoadingDots />
       }
-    </HeaderSection>
+    </>
   );
 };
 
