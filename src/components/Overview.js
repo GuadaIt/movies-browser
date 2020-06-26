@@ -74,7 +74,7 @@ const Img = styled.div`
  };
 `;
 
-const Overview = ({ item, extraInfo, media, api_key }) => {
+const Overview = ({ item, extraInfo, media }) => {
 
   const { idData, castData } = extraInfo;
 

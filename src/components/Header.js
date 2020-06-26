@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { API_URL_BASE } from '../constants';
 import AverageReviewsStar from './AverageReviewsStar';
 import LoadingDots from './LoadingDots';
 
@@ -63,14 +64,14 @@ const HeaderSection = styled.header`
   };
 `;
 
-const Header = ({ headerInfo, api_key }) => {
+const Header = ({ headerInfo }) => {
 
   const [videos, setVideos] = useState();
   const releaseDate = new Date(headerInfo.release_date || headerInfo.last_air_date || headerInfo.first_air_date).toLocaleDateString();
 
   useEffect(() => {
     const fetchVideos = async (arg) => {
-      const videosRes = await fetch(`https://api.themoviedb.org/3/${arg.original_name ? 'tv' : 'movie'}/${arg.id}/videos?api_key=${api_key}&language=en-US`);
+      const videosRes = await fetch(`${API_URL_BASE}${arg.original_name ? 'tv' : 'movie'}/${arg.id}/videos?api_key=${process.env.REACT_APP_API_KEY}&language=en-US`);
       const videosData = await videosRes.json();
       const vidLink = videosData.results;
   
@@ -79,8 +80,6 @@ const Header = ({ headerInfo, api_key }) => {
 
     fetchVideos(headerInfo);
   }, [headerInfo]);
-
-  //to fix: rendering issue. Sometimes href will throw an error
 
   return (
     <>
@@ -94,7 +93,9 @@ const Header = ({ headerInfo, api_key }) => {
             <p>{headerInfo.overview}</p>
           </div>
           <button>
-            <a href={`https://youtube.com/watch?v=${videos[0].key}` || ''} target='_blank'>Watch Trailer</a>
+            <a href={`https://youtube.com/watch?v=${videos[0].key}` || ''} target='_blank' rel="noopener noreferrer">
+              Watch Trailer
+            </a>
           </button>
         </HeaderSection>
         : <LoadingDots />

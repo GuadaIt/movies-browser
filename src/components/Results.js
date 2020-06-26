@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { API_URL_BASE } from '../constants';
 import styled from 'styled-components';
 import Pagination from '@material-ui/lab/Pagination';
 import Card from './Card';
@@ -46,7 +47,7 @@ const ResultsNav = styled.div`
   };
 `;
 
-const Results = ({ api_key }) => {
+const Results = () => {
 
   const { searchInput } = useParams();
   const [results, setResults] = useState([]);
@@ -54,7 +55,7 @@ const Results = ({ api_key }) => {
   const [totalPages, setTotalPages] = useState(null);
 
   useEffect(() => { 
-    fetch(`https://api.themoviedb.org/3/search/multi?api_key=${api_key}&language=en-US&page=${page}&include_adult=false&query=${searchInput}`)
+    fetch(`${API_URL_BASE}search/multi?api_key=${process.env.REACT_APP_API_KEY}&language=en-US&page=${page}&include_adult=false&query=${searchInput}`)
       .then(res => res.json())
       .then(data => {
         setResults(data.results);
@@ -62,12 +63,10 @@ const Results = ({ api_key }) => {
       });
   }, [page]);
 
-  const handleClick = e => {
-    let toPage = Number(e.target.textContent);
-    setPage(toPage);
+  const handleChange = (e, value) => {
+    setPage(value);
   };
 
- //falta resolver el onClick de las flechas de paginacion
   return (
     <Container>
       <ResultsNav>
@@ -77,7 +76,7 @@ const Results = ({ api_key }) => {
         {results.map(item => <Card info={item} key={item.id} />)}
       </div>
       <div className='pagination'>
-        <Pagination count={totalPages} page={page} color='primary' onClick={handleClick} />
+        <Pagination count={totalPages} page={page} color='primary' onChange={handleChange} />
       </div>
     </Container>
   );

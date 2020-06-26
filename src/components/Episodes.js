@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { API_URL_BASE } from '../constants';
 import MediaCard from './MediaCard';
 
 const EpisodesSection = styled.section`
@@ -33,7 +34,7 @@ const EpisodesCardsContainer = styled.div`
   flex-wrap: wrap;
 `;
 
-const Episodes = ({ item, api_key, section }) => {
+const Episodes = ({ item, section }) => {
 
   const { number_of_seasons, id } = item;
   const seasons = Array.apply(null, Array(number_of_seasons));
@@ -41,7 +42,7 @@ const Episodes = ({ item, api_key, section }) => {
   const [seasonEpisodes, setSeasonEpisodes] = useState([]);
 
   useEffect(() => {
-    fetch(`https://api.themoviedb.org/3/tv/${id}/season/${selectedOption}?api_key=${api_key}&language=en-US`)
+    fetch(`${API_URL_BASE}tv/${id}/season/${selectedOption}?api_key=${process.env.REACT_APP_API_KEY}&language=en-US`)
       .then(res => res.json())
       .then(data => setSeasonEpisodes(data.episodes))
   }, [selectedOption]);
@@ -60,7 +61,7 @@ const Episodes = ({ item, api_key, section }) => {
       </div>
 
       <EpisodesCardsContainer>
-        {seasonEpisodes.map(episode => <MediaCard media_item={episode} section={section} />)}
+        {seasonEpisodes.map((episode, i) => <MediaCard key={i} media_item={episode} section={section} />)}
       </EpisodesCardsContainer>
     </EpisodesSection>
   )

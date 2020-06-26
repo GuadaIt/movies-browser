@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery } from 'react-query';
+import { API_URL_BASE, API_URL_LAST } from '../constants';
 import styled from 'styled-components';
 import Header from './Header';
 import CarouselContainer from './CarouselContainer';
@@ -48,14 +49,14 @@ const ContenedorPpal = styled.main`
   };
 `;
 
-const SingleContainer = ({ api_key, baseUrl }) => {
+const SingleContainer = () => {
 
   const [info, setInfo] = useState([]);
   const [section, setSection] = useState('overview');
   const { media, id } = useParams();
 
   useEffect(() => {
-    fetch(`https://api.themoviedb.org/3/${media}/${id}?api_key=${api_key}&language=en-US&`)
+    fetch(`${API_URL_BASE}${media}/${id}?api_key=${process.env.REACT_APP_API_KEY}&language=en-US&`)
       .then(res => res.json())
       .then(data => {
         setInfo(data);
@@ -64,14 +65,14 @@ const SingleContainer = ({ api_key, baseUrl }) => {
 
   const fetchExtraInfo = async (str, id) => {
 
-    const credRes = await fetch(`${baseUrl}/${media}/${id}/credits?api_key=${api_key}&language=en=US&include_image_language=en,null`);
+    const credRes = await fetch(`${API_URL_BASE}${media}/${id}/credits?api_key=${process.env.REACT_APP_API_KEY}&language=en=US&include_image_language=en,null`);
     const creditsData = await credRes.json();
     let castData;
 
     const extraCast = async (credData) => {
       const results = await Promise.all(
         credData.map(async (person) => {
-          const res = await fetch(`https://api.themoviedb.org/3/person/${person.id}?api_key=${api_key}&language=en-US`);
+          const res = await fetch(`${API_URL_BASE}person/${person.id}?api_key=${process.env.REACT_APP_API_KEY}&language=en-US`);
           const data = await res.json();
           return {
             name: person.name,
@@ -86,17 +87,17 @@ const SingleContainer = ({ api_key, baseUrl }) => {
 
     extraCast(creditsData.cast);
 
-    const idRes = await fetch(`${baseUrl}/${media}/${id}/external_ids?api_key=${api_key}&language=en=US&include_image_language=en,null`);
+    const idRes = await fetch(`${API_URL_BASE}${media}/${id}/external_ids?api_key=${process.env.REACT_APP_API_KEY}&language=en=US&include_image_language=en,null`);
     const idData = await idRes.json();
 
-    const imgRes = await fetch(`${baseUrl}/${media}/${id}/images?api_key=${api_key}&language=en=US&include_image_language=en,null`);
+    const imgRes = await fetch(`${API_URL_BASE}${media}/${id}/images?api_key=${process.env.REACT_APP_API_KEY}&language=en=US&include_image_language=en,null`);
     const imgData = await imgRes.json();
 
-    const vidRes = await fetch(`${baseUrl}/${media}/${id}/videos?api_key=${api_key}&language=en-US`);
+    const vidRes = await fetch(`${API_URL_BASE}${media}/${id}/videos?api_key=${process.env.REACT_APP_API_KEY}&language=en-US`);
     const videoData = await vidRes.json();
     const vidData = videoData.results;
 
-    const simRes = await fetch(`${baseUrl}/${media}/${id}/similar?api_key=${api_key}&language=en-US&page=1`);
+    const simRes = await fetch(`${API_URL_BASE}${media}/${id}/similar${API_URL_LAST}`);
     const similarData = await simRes.json();
     const simData = similarData.results;
 
@@ -109,36 +110,36 @@ const SingleContainer = ({ api_key, baseUrl }) => {
 
   const details = {
     'loading': <LoadingDots />,
-    'overview': <Overview item={info} extraInfo={data} media={media} api_key={api_key} />,
+    'overview': <Overview item={info} extraInfo={data} media={media} />,
     'videos': <Media info={data} section='videos' />,
-    'episodes': <Episodes item={info} section='episodes' api_key={api_key} />,
+    'episodes': <Episodes item={info} section='episodes' />,
     'photos': <Media info={data} section='photos' />
   };
 
   const addEpisodesSection = e => {
     e.persist();
-    setSection(e.target.textContent.toLowerCase());
+    setSection(e.target.id);
   };
 
   return (
     <ContenedorPpal>
-      <Header headerInfo={info} api_key={api_key} />
+      <Header headerInfo={info} />
 
       <div>
         <div className="menu">
-          <div id="overview" onClick={addEpisodesSection}>
-            <p>OVERVIEW</p>
+          <div onClick={addEpisodesSection}>
+            <p id="overview" >OVERVIEW</p>
           </div>
           {media === 'tv' &&
-            <div id='episodes' onClick={addEpisodesSection}>
-              <p>EPISODES</p>
+            <div onClick={addEpisodesSection}>
+              <p id='episodes'>EPISODES</p>
             </div>
           }
-          <div id='videos' onClick={addEpisodesSection}>
-            <p>VIDEOS</p>
+          <div onClick={addEpisodesSection}>
+            <p id='videos'>VIDEOS</p>
           </div>
-          <div id='photos' onClick={addEpisodesSection}>
-            <p>PHOTOS</p>
+          <div onClick={addEpisodesSection}>
+            <p  id='photos'>PHOTOS</p>
           </div>
         </div>
 

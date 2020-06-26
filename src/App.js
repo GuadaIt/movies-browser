@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { API_URL_BASE, API_URL_LAST } from './constants';
 import Nav from './components/Nav';
 import MainContainer from './components/MainContainer';
 import SingleContainer from './components/SingleContainer';
@@ -8,40 +9,37 @@ import ExploreAll from './components/ExploreAll';
 
 const App = () => {
 
-  const api_key = process.env.REACT_APP_API_KEY;
-  const baseUrl = 'https://api.themoviedb.org/3';
-
   const links = {
     home: {
-      linkHeader: `${baseUrl}/trending/all/week?api_key=${api_key}`,
+      linkHeader: `${API_URL_BASE}trending/all/week${API_URL_LAST}`,
       title1: 'Trending Movies',
-      link1: `${baseUrl}/trending/movie/week?api_key=${api_key}`,
+      link1: `${API_URL_BASE}trending/movie/week${API_URL_LAST}`,
       title2: 'Trending Tv Shows',
-      link2: `${baseUrl}/trending/tv/week?api_key=${api_key}`
+      link2: `${API_URL_BASE}trending/tv/week${API_URL_LAST}`
     },
 
     tv: {
-      linkHeader: `${baseUrl}/trending/tv/week?api_key=${api_key}`,
+      linkHeader: `${API_URL_BASE}trending/tv/week${API_URL_LAST}`,
       title1: 'Popular Tv Shows',
-      link1: `${baseUrl}/tv/popular?api_key=${api_key}&language=en-US&page=1`,
+      link1: `${API_URL_BASE}tv/popular${API_URL_LAST}`,
       title2: 'Top Rated Tv Shows',
-      link2: `${baseUrl}/tv/top_rated?api_key=${api_key}&language=en-US&page=1`,
+      link2: `${API_URL_BASE}tv/top_rated${API_URL_LAST}`,
       title3: 'Currently Airing Tv Shows',
-      link3: `${baseUrl}/tv/on_the_air?api_key=${api_key}&language=en-US&page=1`,
+      link3: `${API_URL_BASE}tv/on_the_air${API_URL_LAST}`,
       title4: 'Tv Shows Airing Today',
-      link4: `${baseUrl}/tv/airing_today?api_key=${api_key}&language=en-US&page=1`
+      link4: `${API_URL_BASE}tv/airing_today${API_URL_LAST}`
     },
 
     movie: {
-      linkHeader: `${baseUrl}/movie/upcoming?api_key=${api_key}&language=en-US&page=1`,
+      linkHeader: `${API_URL_BASE}movie/upcoming${API_URL_LAST}`,
       title1: 'Popular Movies',
-      link1: `${baseUrl}/movie/popular?api_key=${api_key}&language=en-US&page=1`,
+      link1: `${API_URL_BASE}movie/popular${API_URL_LAST}`,
       title2: 'Top Rated Movies',
-      link2: `${baseUrl}/movie/top_rated?api_key=${api_key}&language=en-US&page=1`,
+      link2: `${API_URL_BASE}movie/top_rated${API_URL_LAST}`,
       title3: 'Upcoming Movies',
-      link3: `${baseUrl}/movie/upcoming?api_key=${api_key}&language=en-US&page=1`,
+      link3: `${API_URL_BASE}movie/upcoming${API_URL_LAST}`,
       title4: 'Now Playing Movies',
-      link4: `${baseUrl}/movie/now_playing?api_key=${api_key}&language=en-US&page=1`
+      link4: `${API_URL_BASE}movie/now_playing${API_URL_LAST}`
     }
   };
 
@@ -53,13 +51,13 @@ const App = () => {
       </div>
 
       <Switch>
-        <Route exact path='/' component={() => <MainContainer links={links.home} api_key={api_key}/>} />
-        <Route exact path='/tv' component={() => <MainContainer links={links.tv} api_key={api_key}/>} />
-        <Route exact path='/movie' component={() => <MainContainer links={links.movie} api_key={api_key}/>} />
-        <Route exact path='/search/:searchInput' component={() => <Results api_key={api_key} />} />
-        <Route exact path='/:media/:id' component={() => <SingleContainer api_key={api_key} baseUrl={baseUrl} />} />        
-        <Route exact path='/:media/category/:category' component={() => <ExploreAll api_key={api_key} />} />
-        <Route exact path='/:media/:id/similar' component={() => <ExploreAll api_key={api_key} />} />
+        <Route exact path='/' component={() => <MainContainer links={links.home} />} />
+        <Route exact path='/tv' component={() => <MainContainer links={links.tv} />} />
+        <Route exact path='/movie' component={() => <MainContainer links={links.movie} />} />
+        <Route exact path='/search/:searchInput' component={Results} />
+        <Route exact path='/:media/:id' component={SingleContainer} />        
+        <Route exact path='/:media/category/:category' component={ExploreAll} />
+        <Route exact path='/:media/:id/similar' component={ExploreAll} />
       </Switch>
 
     </Router>

@@ -6,7 +6,7 @@ import Card from './Card';
 const Section = styled.section`
   position: relative;
   min-width: 100%;
-  padding: 30px 20px;
+  padding: 30px 50px;
   color: #fff;
   .title-section {
     margin-bottom: 20px;
@@ -26,7 +26,6 @@ const Section = styled.section`
   @media (min-width: 780px) {
     .title-section {
       display: flex;
-      margin: 0 0 20px 40px;
       align-items: baseline;
       h3 {
         font-size: 30px;
@@ -37,6 +36,7 @@ const Section = styled.section`
 `;
 
 const Carousel = styled.ul`
+  padding: 0;
   overflow: hidden;
   div {
    display: flex;
@@ -44,6 +44,7 @@ const Carousel = styled.ul`
    list-style: none;
   };
 `;
+
 
 const CarouselContainer = ({ info, title }) => {
 
@@ -78,9 +79,9 @@ const CarouselContainer = ({ info, title }) => {
       </div>
       <Carousel>
         {info &&
-          <div>
-            {info.map(item => <Card info={item} key={item.id} pathname={pathname} cast={title} />)}
-          </div>
+            <div>
+              {info.map(item => <Card info={item} key={item.id} pathname={pathname} cast={title} />)}
+            </div>
         }
       </Carousel>
     </Section>

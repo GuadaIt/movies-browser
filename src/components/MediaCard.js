@@ -71,7 +71,7 @@ const MediaCard = ({ media_item, section }) => {
             <img src={mediaLink[section]} alt={media_item.name} />
 
             {section === 'videos' &&
-              <ExternalMediaLink href={`https://youtube.com/watch?v=${media_item.key}`}>
+              <ExternalMediaLink href={`https://youtube.com/watch?v=${media_item.key}`} target='_blank' rel="noopener noreferrer">
                 <div>
                   <img src={playIcon} alt='play' />
                 </div>

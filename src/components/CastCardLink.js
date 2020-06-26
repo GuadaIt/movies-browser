@@ -36,7 +36,7 @@ const CastLink = styled.a`
 
 const CastCardLink = ({ info }) => {
   return (
-    <CastLink href={`https://www.imdb.com/name/${info.imdb_id}`} target="_blank">
+    <CastLink href={`https://www.imdb.com/name/${info.imdb_id}`} target="_blank" rel="noopener noreferrer" >
       <div className='img'>
         <img alt={info.name} src={`https://image.tmdb.org/t/p/w500/${info.profile_path}`} />
       </div>
